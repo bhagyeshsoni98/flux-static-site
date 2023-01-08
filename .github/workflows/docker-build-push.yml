@@ -11,8 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Get docker image version
-      id: vars
-      run: echo ::set-output name=version::$(cat docker_image_version)
+      run: |
+        ls -al
+        pwd
    
     - name: Test output
       run: echo ${{ steps.vars.outputs.version }}
