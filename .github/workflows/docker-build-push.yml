@@ -5,22 +5,23 @@ on:
     branches:
       - 'main'
 
-
 jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
     
-    - name: Get
-      run: |
-        ls -al
-        pwd
-        find . -ls
-   
+    - uses: actions/checkout@v2
+      name: Check out code
+
     - name: Get docker image version
       id: vars
       run: echo "version=$(cat docker_image_version)" >> $GITHUB_OUTPUT
       
-    - name: Test output
-      run: echo ${{ steps.vars.outputs.version }}
+    - uses: mr-smithers-excellent/docker-build-push@v5
+      name: Build & push Docker image
+      with:
+        image: bhagyesh19/static-site
+        tags: ${{ steps.vars.outputs.version }}
+        registry: docker.io
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
